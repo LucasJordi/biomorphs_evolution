@@ -39,6 +39,8 @@ option = st.sidebar.selectbox(
 )
 if option:
     print(option)
+    selected_rule = core.get_rules()[core.get_rules()['Nome']==option]["Regra"].tolist()[0]
+    print(selected_rule)
 if input_valid:
     gerar_biomorfo_btn = st.sidebar.button("Gerar evolução")
     if gerar_biomorfo_btn:
@@ -61,9 +63,9 @@ if input_valid:
         st.sidebar.pyplot(plt)
 
         rule = core.parse_life_rule(selected_rule)
-
+        print(selected_rule)
         # # Evolução dos biomorfos 2D
-        final_biomorph, characteristics_df = core.generate_biomorphs_2d_until_convergence(matrix_2d, rule, "B3/S23", "Semente1-Regra1")
+        final_biomorph, characteristics_df = core.generate_biomorphs_2d_until_convergence(matrix_2d, rule, selected_rule, "Semente1-Regra1")
         if os.path.exists("biomorphs"):
             # Create ZIP file
             zip_buffer = core.create_zip_from_folder("biomorphs")
