@@ -17,17 +17,21 @@ st.set_page_config(
 st.title("Evolução Biomorfos")
 
 # Input field for the numeral string
-input_text = st.sidebar.text_input("Digite o estado inicial (formato: '0001000')")
+input_text = st.sidebar.text_input("Digite o estado inicial ou fita (formato: '0001000' ou '0001000B...')")
 
 sementinha = None
 input_valid = False
 if input_text:
-    if re.match(r'^\d+$', input_text):
+    if re.match(r'^[0-1B]+$', input_text):
         input_valid = True
-        
-        sementinha = [int(x) for x in input_text] 
+        if 'B' in input_text:
+            sementinhha_matrix = core.string_to_matrix(input_text)
+            sementinha = sementinhha_matrix
+            
+        else:
+            sementinha = [int(x) for x in input_text] 
     else:
-        st.error("Por favor, insira apenas números.")
+        st.error("Por favor, insira apenas os números 1 ou 0 ou o uma fita com separador 'B'.")
 
 
 
@@ -60,11 +64,21 @@ if input_valid:
         initial_state = core.acrescentar_zeros(sementinha, 3) 
         generations = 7
         # Gerar biomorfo 1D com a regra escolhida
-        biomorph_1d = core.generate_biomorphs_1d(generations, np.array(initial_state), rule_number)
+        # if isinstance(array[0],list):
+        biomorph_1d = None
+        if isinstance(sementinha[0],list):
+            biomorph_1d = np.array(initial_state)            
+        else:
+            biomorph_1d = core.generate_biomorphs_1d(generations, np.array(initial_state), rule_number)
+        
         biomorph7x7 = core.extrair_centro(biomorph_1d,generations)
+        
+     
+        
         #matrix_size = int(input("Digite o tamanho da matriz para atuação da regra 2D (ex: 30): "))
         matrix_size = 30
         matrix_2d = core.centralize_seed_in_matrix(biomorph7x7, matrix_size)
+       
         st.session_state['biomorfo_inicial'] = matrix_2d
         st.session_state['generations'] = generations
         st.session_state['rule_number'] = rule_number

@@ -29,6 +29,7 @@ def apply_rule_1d(state, transition_table):
 def generate_biomorphs_1d(generations, seed, rule_number):
     transition_table = rule_to_transition_table(rule_number)
     states = np.zeros((generations, len(seed)), dtype=int)
+    print(states,"states")
     states[0] = seed
     for i in range(1, generations):
         states[i] = apply_rule_1d(states[i-1], transition_table)
@@ -201,8 +202,12 @@ def acrescentar_zeros(array, num_zeros):
     zeros_inicio = np.zeros(num_zeros)
     zeros_fim = np.zeros(num_zeros)
 
-    # Concatenar os zeros com o array original
-    novo_array = np.concatenate((zeros_inicio, array, zeros_fim))
+    novo_array = []
+    if isinstance(array[0],list):
+        novo_array = [np.concatenate((zeros_inicio, i, zeros_fim)) for i in array]
+    else:
+        novo_array = np.concatenate((zeros_inicio, array, zeros_fim))
+
 
     return novo_array
 import numpy as np
@@ -235,6 +240,14 @@ def update_or_add_object(obj_list, iteration, new_name):
         obj_list.append({"iteration": iteration, "name": new_name})
 
     return obj_list
+
+def string_to_matrix(s: str):
+    rows = s.split('B')
+    matrix = [list(map(int, row)) for row in rows]
+    max_length = max(len(row) for row in matrix)
+    padded_matrix = [row + [0] * (max_length - len(row)) for row in matrix]
+
+    return padded_matrix
 
 def create_zip_from_folder(folder_path):
     zip_buffer = io.BytesIO()
