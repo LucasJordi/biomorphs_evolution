@@ -5,7 +5,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import os
 import streamlit as st
-
+import openpyxl
+from PIL import Image
 
 
 # Função para converter um número de regra em uma tabela de transição
@@ -214,6 +215,26 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Função para gerar biomorfos 2D
+def remove_object(obj_list, iteration):
+    # Use list comprehension to filter out objects with the given iteration
+    obj_list = [obj for obj in obj_list if obj['iteration'] != iteration]
+    return obj_list
+
+def update_or_add_object(obj_list, iteration, new_name):
+    # Check if the object with the given iteration exists
+    found = False
+    for obj in obj_list:
+        if obj['iteration'] == iteration:
+            # Update the existing object's name
+            obj['name'] = new_name
+            found = True
+            break
+    
+    # If no object was found, append a new object
+    if not found:
+        obj_list.append({"iteration": iteration, "name": new_name})
+
+    return obj_list
 
 def create_zip_from_folder(folder_path):
     zip_buffer = io.BytesIO()
@@ -250,6 +271,8 @@ def generate_biomorphs_2d_until_convergence(seed, rule_func, rule_name, initial_
     iteration = 0
     characteristics = []
     output_dir="biomorphs"
+    animal_names = pd.DataFrame(columns=["iteration", "name"])
+    key_check=0
     import shutil
     try:
         shutil.rmtree(output_dir)
@@ -270,13 +293,35 @@ def generate_biomorphs_2d_until_convergence(seed, rule_func, rule_name, initial_
         # Save the image of the current state
         filename = f'{initial_state_name_safe}-{rule_name_safe}-Iteracao{iteration}.png'
         filepath = os.path.join(output_dir, filename)
-        plt.figure(figsize=(3, 3))
+        plt.figure(figsize=(4, 4))
+        # print(current_state)
         plt.imshow(current_state, cmap='binary')
         plt.title(f'{initial_state_name_safe}-{rule_name_safe} Iteração {iteration}')
         plt.savefig(filepath)
-        st.pyplot(plt)
+        col1, col2 = st.columns(2)
+        import streamlit_ext as ste
+
+        with col1:
+            st.pyplot(plt)
+        with col2:            
+            agree = st.checkbox("É animal",key=key_check)
+            if agree:
+                input_check = st.text_input("Qual o nome do aninal?",key=f'{key_check}input')
+                if input_check:
+                    o=update_or_add_object(st.session_state.is_animal_state,iteration,input_check)
+                    
+                    print("iteration",o)
+            else:
+                st.session_state.is_animal_state=remove_object(st.session_state.is_animal_state,iteration)
+                
+
+       
+
+        
+        # checkbox = st.checkbox(f'Se parece com um animal?')
         # plt.show()  # Exibir a imagem gerada
-        plt.close()
+        key_check=key_check+1
+        # plt.close()
 
         # Calculate characteristics
         fractal_dim = fractal_dimension(current_state)
@@ -315,6 +360,7 @@ def generate_biomorphs_2d_until_convergence(seed, rule_func, rule_name, initial_
         'É Animal?', 'Nome do Animal'
     ]
     characteristics_df = pd.DataFrame(characteristics, columns=columns)
+    
 
     # Ask user to identify iterations that look like animals
     # animal_iterations = input("Informe os índices das iterações que se parecem com animais (separados por vírgulas): ")
