@@ -90,23 +90,21 @@ if input_valid:
                 file_name="folder_contents.zip",
                 mime="application/zip"
             )
-            
-            if downbtn:
-                for obj in st.session_state.is_animal_state:
-                    characteristics_df.at[obj["iteration"]-1, 'É Animal?'] = 'Sim'
-                    characteristics_df.at[obj["iteration"]-1, 'Nome do Animal'] = obj['name']
+            for obj in st.session_state.is_animal_state:
+                characteristics_df.at[obj["iteration"]-1, 'É Animal?'] = 'Sim'
+                characteristics_df.at[obj["iteration"]-1, 'Nome do Animal'] = obj['name']
 
-                characteristics_df.to_excel("biomorph_characteristics.xlsx", index=False)
-                with open("biomorph_characteristics.xlsx", "rb") as file:
-                    file_data = file.read()
-                # st.session_state.is_animal_state = []
-                st.sidebar.download_button(
-                    label="Baixar planilha",
-                    data=file_data,
-                    file_name="biomorph_characteristics.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
-                print(characteristics_df)
+            characteristics_df.to_excel("biomorph_characteristics.xlsx", index=False)
+            with open("biomorph_characteristics.xlsx", "rb") as file:
+                file_data = file.read()
+            # st.session_state.is_animal_state = []
+            st.sidebar.download_button(
+                label="Baixar planilha",
+                data=file_data,
+                file_name="biomorph_characteristics.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+                
                 
         
         print(regra)
