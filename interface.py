@@ -90,9 +90,13 @@ if input_valid:
         st.sidebar.pyplot(plt)
 
         rule = core.parse_life_rule(selected_rule)
-        
+        regra1d = f"{sementinha}-CAR{rule_number}"
+        if isinstance(sementinha[0],list):
+            regra1d = f"{sementinha[0]}-CAR{rule_number}"
+        else:
+            regra1d = f"{sementinha}-CAR{rule_number}"
         # # Evolução dos biomorfos 2D
-        final_biomorph, characteristics_df = core.generate_biomorphs_2d_until_convergence(matrix_2d, rule, selected_rule, "Semente1-Regra1")
+        final_biomorph, characteristics_df = core.generate_biomorphs_2d_until_convergence(matrix_2d, rule, selected_rule, regra1d)
         if os.path.exists("biomorphs"):
             # Create ZIP file
             zip_buffer = core.create_zip_from_folder("biomorphs")

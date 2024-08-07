@@ -420,9 +420,10 @@ def main():
 
     # Gerar regras 2D a partir da seleção
     rule = parse_life_rule(selected_rule)
+    regra1d = f"{sementinha}-CAR{rule_number}"
 
     # Evolução dos biomorfos 2D
-    final_biomorph, characteristics_df = generate_biomorphs_2d_until_convergence(matrix_2d, rule, "B3/S23", "Semente1-Regra1")
+    final_biomorph, characteristics_df = generate_biomorphs_2d_until_convergence(matrix_2d, rule, selected_rule, regra1d)
 
     # Salvar características em arquivo Excel
     characteristics_df.to_excel("biomorph_characteristics.xlsx", index=False)
