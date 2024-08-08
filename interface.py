@@ -56,6 +56,13 @@ if option:
 if input_valid:
     gerar_biomorfo_btn = st.sidebar.button("Gerar evolução")
     if gerar_biomorfo_btn or st.session_state.load_state :
+        output_dir="biomorphs"
+
+        import shutil
+        try:
+            shutil.rmtree(output_dir)
+        except FileNotFoundError:
+            print('')
         st.session_state.load_state = True
         selected_rule = core.get_rules()[core.get_rules()['Nome']==option]["Regra"].tolist()[0]
         regra=gerar_biomorfo_btn
@@ -79,15 +86,16 @@ if input_valid:
         matrix_size = 30
         matrix_2d = core.centralize_seed_in_matrix(biomorph7x7, matrix_size)
        
-        st.session_state['biomorfo_inicial'] = matrix_2d
-        st.session_state['generations'] = generations
-        st.session_state['rule_number'] = rule_number
-        plt.figure(figsize=(6, 6))
-        plt.imshow(matrix_2d, cmap='binary')
+        # st.session_state['biomorfo_inicial'] = matrix_2d
+        # st.session_state['generations'] = generations
+        # st.session_state['rule_number'] = rule_number
+        # plt.figure(figsize=(6, 6))
+        # plt.imshow(matrix_2d, cmap='binary')
         
-        plt.title(f'Semente {generations}x{generations} gerada com a Regra {rule_number}')
-        # plt.show()
-        st.sidebar.pyplot(plt)
+        # plt.title(f'Semente {generations}x{generations} gerada com a Regra {rule_number}')
+        # # plt.show()
+        # st.sidebar.pyplot(plt)
+        core.generate_initial_biomorph_image(matrix_2d,generations,rule_number)
 
         rule = core.parse_life_rule(selected_rule)
         regra1d = f"{sementinha}-CAR{rule_number}"

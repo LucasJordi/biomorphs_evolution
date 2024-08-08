@@ -262,6 +262,18 @@ def create_zip_from_folder(folder_path):
     zip_buffer.seek(0)
     return zip_buffer
 
+
+def generate_initial_biomorph_image(matrix_2d,generations,rule_number):
+    st.session_state['biomorfo_inicial'] = matrix_2d
+    st.session_state['generations'] = generations
+    st.session_state['rule_number'] = rule_number
+    plt.figure(figsize=(6, 6))
+    plt.imshow(matrix_2d, cmap='binary')
+    
+    plt.title(f'Semente {generations}x{generations} gerada com a Regra {rule_number}')
+    # plt.show()
+    st.sidebar.pyplot(plt)
+
 def generate_biomorphs_2d_until_convergence(seed, rule_func, rule_name, initial_state_name):
     """
     Generates 2D biomorphs using a given Life-like rule and iterates until convergence.
@@ -286,11 +298,7 @@ def generate_biomorphs_2d_until_convergence(seed, rule_func, rule_name, initial_
     output_dir="biomorphs"
     animal_names = pd.DataFrame(columns=["iteration", "name"])
     key_check=0
-    import shutil
-    try:
-        shutil.rmtree(output_dir)
-    except FileNotFoundError:
-        print('')
+    
     while True:
         iteration += 1
         prev_previous_state = previous_state
@@ -364,6 +372,8 @@ def generate_biomorphs_2d_until_convergence(seed, rule_func, rule_name, initial_
             break
         elif np.array_equal(current_state, prev_previous_state):
             print("Detected oscillation between two states.")
+            break
+        if iteration == 100:
             break
 
     # Create DataFrame for characteristics
