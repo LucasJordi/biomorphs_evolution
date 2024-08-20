@@ -1,6 +1,4 @@
-Claro! Aqui está o conteúdo pronto para um arquivo `README.md`. Você pode copiar e colar o texto abaixo diretamente em um arquivo `README.md` no seu projeto.
 
-```markdown
 # Evolução de Biomorfos com Automatos Celulares
 
 Este projeto é uma solução para a evolução de biomorfos usando automatos celulares, desenvolvida com Streamlit. O software permite a visualização e manipulação de padrões evolutivos utilizando regras de autômatos celulares bidimensionais da família "Vida".
@@ -74,8 +72,6 @@ Se você tiver alguma dúvida ou sugestão, entre em contato:
 
 ---
 
-Agradecemos por usar o nosso software e esperamos que ele seja útil para suas explorações com automatos celulares!
-```
 
 
 
